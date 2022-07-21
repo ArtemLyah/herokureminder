@@ -11,18 +11,22 @@ def add_user(user_id):
         cursor.execute(f"INSERT INTO user_settings(user_id) VALUES({user_id})")
         connection.commit()
 
-def get_is_create_task(user_id):
-    cursor.execute(f"SELECT is_create_task FROM user_settings WHERE user_id={user_id}")
+def get_from_user_settings(user_id, args:list):
+    cursor.execute(f"SELECT {','.join(args)} FROM user_settings WHERE user_id={user_id}")
     res = cursor.fetchall()[0][0]
     return res
-def set_is_create_task(user_id, b:bool):
-    cursor.execute(f"UPDATE user_settings SET is_create_task={b} WHERE user_id={user_id}")
+def set_user_settings(user_id, kwargs:dict):
+    s = ""
+    for item in kwargs.items():
+        s += item[0]+"="+repr(item[1])
+    cursor.execute(f"UPDATE user_settings SET {s} WHERE user_id={user_id}")
     connection.commit()
 
 def create_task(user_id, text, date=None):
     if date:
         if len(date.split()) == 1:
-            date += datetime.strftime(datetime.fromtimestamp(datetime.now().timestamp()+3*3600), " %d/%m/%Y")
+            utc = float(get_from_user_settings(user_id, ["utc"]))
+            date += datetime.strftime(datetime.fromtimestamp(datetime.now().timestamp()+utc*3600), " %d/%m/%Y")
         date = datetime.strptime(date, "%H:%M:%S %d/%m/%Y").timestamp()
         sql = f"INSERT INTO tasks(user_id, text, date) VALUES({user_id}, '{text.strip()}', {date})"
     else:
@@ -45,8 +49,10 @@ def remove_task(user_id, task_id):
     
 
 def get_alarm_tasks():
-    america_time = datetime.now().timestamp()+3*3600
-    sql = f"SELECT user_id, text FROM tasks WHERE date <= {america_time}"
+    # utc = float(get_from_user_settings(user_id, ["utc"]))
+    europe_time = datetime.now()
+    print(europe_time(europe_time.astimezone()))
+    sql = f"SELECT user_id, text FROM tasks WHERE date <= {europe_time}"
     cursor.execute(sql)
     return cursor.fetchall()
 def remove_date_from_task(user_id, text):

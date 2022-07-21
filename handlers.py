@@ -47,7 +47,6 @@ async def callback_query_task(query:types.CallbackQuery):
 
 @dp.message_handler(filters.Command(["start"]))
 async def start(message:types.Message):
-    print(message)
     db_tasks.add_user(message.from_user.id)
     await message.answer("Hello I am reminder 🗓.\nLet's create your tasks /menu")
 # main menu

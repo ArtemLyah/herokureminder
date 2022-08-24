@@ -1,9 +1,9 @@
 import psycopg2
 connection = psycopg2.connect(
-    host = "ec2-52-48-159-67.eu-west-1.compute.amazonaws.com",
-    database = "d4tq4jiive4ib7",
-    user="lkyaeppwqnhnsi",
-    password="d063dec16b1d5db2924791d63c47e7006e666628846842e55fda38846814c73a"
+    host = "ec2-54-75-26-218.eu-west-1.compute.amazonaws.com",
+    database = "d311bpqh4vdsbb",
+    user="jygzulixavhtch",
+    password="d53a8835396e5e76256f0f5dfb7a0d2d67d68f3992c6566844c94d864470faa1"
 )
 cursor = connection.cursor()
 # manage users
